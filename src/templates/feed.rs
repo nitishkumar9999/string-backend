@@ -170,12 +170,12 @@ pub fn render_header(user: Option<&(i32, String, Option<String>)>, csrf_token: O
                             }
                             div class="settings-menu" role="menu" {
 
-                                a href="mailto:nitishkumar1605@tutamail.com" 
+                                a href="mailto:support@stringtechhub.com" 
                                     class="settings-item settings-item-divider"
                                     target="_blank"
                                 {
                                     (PreEscaped(ICON_MAIL))
-                                    "nitishkumar1605@tutamail.com"
+                                    "support@stringtechhub.com"
                                 }
 
                                     // Logout Button
