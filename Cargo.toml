@@ -1,0 +1,111 @@
+[package]
+name = "string_backend"
+version = "0.1.0"
+edition = "2021"
+
+[profile.release]
+opt-level = 3          # Maximum optimization
+lto = true             # Link-time optimization (smaller, faster binary)
+codegen-units = 1      # Better optimization (slower compile, faster runtime)
+strip = true           # Strip debug symbols from binary (smaller size)
+panic = "abort"        # Smaller binary, no unwinding overhead
+
+# Dev profile stays fast to compile
+[profile.dev]
+opt-level = 0
+debug = true
+
+[dependencies]
+
+# Web Framework
+axum = { version = "0.7", features = ["macros"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.6", features = ["fs", "cors", "trace", "timeout", "limit", "compression-gzip"] }
+
+# Async Runtime
+tokio = { version = "1", features = ["full"] }
+
+# Database
+sqlx = { version = "0.7", features = [
+    "runtime-tokio-rustls",
+    "postgres",
+    "uuid",
+    "time",
+    "migrate",
+    "ipnetwork",
+] }
+ipnetwork = "0.20"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Time handling
+time = { version = "0.3", features = ["serde", "macros", "parsing", "formatting"] }
+
+# Validation
+validator = { version = "0.18", features = ["derive"] }
+regex = "1.10"
+
+# Error Handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Hashing
+sha2 = "0.10"
+hex = "0.4"
+
+# Image validation
+image = "0.25"
+
+# URL parsing
+url = "2.5"
+
+# Unicode / emoji
+unicode-segmentation = "1.11"
+emojis = "0.8.0"
+
+# Rate Limiting
+governor = "0.6"
+nonzero_ext = "0.3"
+
+# Tracing/Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+
+# Environment variables
+dotenvy = "0.15"
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# HTTP client
+reqwest = { version = "0.11", features = ["rustls-tls", "json"] }
+
+# Markdown / HTML
+pulldown-cmark = "0.13.0"
+ammonia = "4.1.2"
+html-escape = "0.2.13"
+syntect = "5.3.0"
+
+# Encoding / Security
+base64 = "0.22.1"
+rand = "0.8"
+
+# Misc
+urlencoding = "2.1.3"
+lazy_static = "1.5.0"
+once_cell = "1.21.3"
+infer = "0.19.0"
+config = "0.14"
+maud = "0.27.0"
+mime_guess = "2.0.5"
+
+[dev-dependencies]
+tokio-test = "0.4"
+http-body-util = "0.1"
+fake = "2.9"
+quickcheck = "1.0"
+quickcheck_macros = "1.0"
+proptest = "1.4"
+tower = { version = "0.4", features = ["util"] }

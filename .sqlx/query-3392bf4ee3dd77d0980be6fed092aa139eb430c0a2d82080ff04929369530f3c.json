@@ -1,0 +1,60 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO post_media \n            (post_id, media_type, file_path, original_filename, mime_type, \n             file_size, width, height, display_order)\n            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n            RETURNING id, media_type, file_path, mime_type, width, height\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "media_type",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "file_path",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 3,
+        "name": "mime_type",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "width",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "height",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Int8",
+        "Int4",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      true
+    ]
+  },
+  "hash": "3392bf4ee3dd77d0980be6fed092aa139eb430c0a2d82080ff04929369530f3c"
+}

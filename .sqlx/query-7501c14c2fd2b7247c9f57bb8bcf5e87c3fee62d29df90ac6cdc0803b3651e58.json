@@ -1,0 +1,46 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT id as \"id!\", platform, url, display_text, display_order as \"display_order!\"\n        FROM user_links\n        WHERE user_id = $1\n        ORDER BY display_order ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id!",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "platform",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "url",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "display_text",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "display_order!",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "7501c14c2fd2b7247c9f57bb8bcf5e87c3fee62d29df90ac6cdc0803b3651e58"
+}

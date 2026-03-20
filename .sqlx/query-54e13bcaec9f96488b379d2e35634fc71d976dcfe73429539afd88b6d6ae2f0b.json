@@ -1,0 +1,22 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT user_id FROM refracts WHERE id = $1 AND deleted_at IS NULL AND is_spam = false",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "user_id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "54e13bcaec9f96488b379d2e35634fc71d976dcfe73429539afd88b6d6ae2f0b"
+}

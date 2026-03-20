@@ -1,0 +1,87 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT \n                c.id, c.user_id, u.username, c.content_rendered_html,\n                c.depth_level, c.helpful_count, c.reply_count,\n                c.created_at, c.edited_at, c.deleted_at,\n                COALESCE(\n                    (SELECT true FROM comment_helpful \n                     WHERE comment_id = c.id AND user_id = $5),\n                    false\n                ) as \"has_marked_helpful?\"\n            FROM comments c\n            JOIN users u ON c.user_id = u.id\n            WHERE c.parent_comment_id IS NULL\n              AND c.post_id = $1\n              AND c.question_id = $2\n              AND c.answer_id = $3\n              AND c.created_at < $4\n            ORDER BY c.helpful_count DESC, c.created_at DESC\n            LIMIT $6\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "content_rendered_html",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "depth_level",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "helpful_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "reply_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 8,
+        "name": "edited_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "deleted_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "has_marked_helpful?",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4",
+        "Timestamptz",
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true,
+      null
+    ]
+  },
+  "hash": "b5ec56ea1c42998b3285ea1c3b765de685d49e24313c23cebc507f631aa22eff"
+}

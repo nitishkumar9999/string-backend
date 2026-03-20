@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT id, github_id, github_username,\n               username, name, avatar_url, bio_raw, bio_rendered_html,\n               created_at, updated_at\n        FROM users\n        WHERE github_id = $1 AND deleted_at IS NULL\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "github_id",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 2,
+        "name": "github_username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "bio_raw",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "bio_rendered_html",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 9,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "13838cab64cc59eb089079632fde1119567a656d65d38f73d9d8d588bf5514d7"
+}

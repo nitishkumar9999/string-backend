@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT EXISTS(\n            SELECT 1 FROM comments\n            WHERE user_id = $1\n              AND content_hash = $2\n              AND deleted_at IS NULL\n              AND created_at > NOW() - INTERVAL '1 hour'\n        ) as \"exists!\"\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "exists!",
+        "type_info": "Bool"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": [
+      null
+    ]
+  },
+  "hash": "8cfc853c8a649fa025af6aa27e1002a552a4db4e3786ec720b23341a372ba77a"
+}

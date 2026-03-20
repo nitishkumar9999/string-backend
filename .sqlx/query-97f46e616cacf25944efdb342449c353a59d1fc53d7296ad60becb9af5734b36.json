@@ -1,0 +1,23 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT id\n            FROM refracts\n            WHERE original_post_id = $1 \n              AND deleted_at IS NULL\n              AND is_spam = false\n            ORDER BY created_at DESC\n            LIMIT $2\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "97f46e616cacf25944efdb342449c353a59d1fc53d7296ad60becb9af5734b36"
+}

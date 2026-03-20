@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE refracts SET deleted_at = $1 WHERE id = $2 AND user_id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "2eb2749ee51eeb93b451c784c08fe9158a860162648970d9d55138afe3cf586d"
+}

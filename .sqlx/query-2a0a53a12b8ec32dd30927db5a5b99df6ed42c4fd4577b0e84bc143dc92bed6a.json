@@ -1,0 +1,76 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT \n            u.id, u.username, u.name, u.avatar_url, u.bio_rendered_html,\n            u.created_at,\n            (SELECT COUNT(*) FROM posts WHERE user_id = u.id AND deleted_at IS NULL) as \"post_count!\",\n            (SELECT COUNT(*) FROM questions WHERE user_id = u.id AND deleted_at IS NULL) as \"question_count!\",\n            (SELECT COUNT(*) FROM answers WHERE user_id = u.id AND deleted_at IS NULL) as \"answer_count!\",\n            (SELECT COUNT(*) FROM refracts WHERE user_id = u.id AND deleted_at IS NULL) as \"refract_count!\"\n        FROM users u\n        WHERE u.username = $1 AND u.deleted_at IS NULL\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "username",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "avatar_url",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "bio_rendered_html",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "post_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 7,
+        "name": "question_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 8,
+        "name": "answer_count!",
+        "type_info": "Int8"
+      },
+      {
+        "ordinal": 9,
+        "name": "refract_count!",
+        "type_info": "Int8"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      true,
+      false,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "hash": "2a0a53a12b8ec32dd30927db5a5b99df6ed42c4fd4577b0e84bc143dc92bed6a"
+}

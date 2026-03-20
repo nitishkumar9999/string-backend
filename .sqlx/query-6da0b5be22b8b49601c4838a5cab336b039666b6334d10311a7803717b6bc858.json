@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE comments SET deleted_at = $1 WHERE id = $2 AND user_id = $3",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "6da0b5be22b8b49601c4838a5cab336b039666b6334d10311a7803717b6bc858"
+}

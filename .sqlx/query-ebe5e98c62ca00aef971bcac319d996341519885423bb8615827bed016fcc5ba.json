@@ -1,0 +1,72 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        INSERT INTO comments (\n            user_id, post_id, question_id, answer_id, parent_comment_id,\n            depth_level, content_raw, content_rendered_html, content_hash\n        )\n        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)\n        RETURNING id, user_id, depth_level, helpful_count, reply_count,\n                  created_at, edited_at, deleted_at\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "depth_level",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "helpful_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 4,
+        "name": "reply_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 5,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 6,
+        "name": "edited_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 7,
+        "name": "deleted_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Int4",
+        "Text",
+        "Text",
+        "Varchar"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      true
+    ]
+  },
+  "hash": "ebe5e98c62ca00aef971bcac319d996341519885423bb8615827bed016fcc5ba"
+}

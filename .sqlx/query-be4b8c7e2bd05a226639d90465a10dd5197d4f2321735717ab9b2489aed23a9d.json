@@ -1,0 +1,89 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            SELECT p.id, p.user_id, p.title, p.content_rendered_html, p.slug, p.is_spam,\n                   p.echo_count, p.refract_count, p.comment_count,\n                   p.created_at, p.edited_at, u.username\n            FROM posts p\n            JOIN users u ON p.user_id = u.id\n            WHERE p.deleted_at IS NULL AND p.is_spam = false AND p.created_at < $1\n            ORDER BY p.created_at DESC\n            LIMIT $2\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "user_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "title",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "content_rendered_html",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 4,
+        "name": "slug",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "is_spam",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 6,
+        "name": "echo_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 7,
+        "name": "refract_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 8,
+        "name": "comment_count",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 9,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 10,
+        "name": "edited_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 11,
+        "name": "username",
+        "type_info": "Varchar"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Timestamptz",
+        "Int8"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      true,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "be4b8c7e2bd05a226639d90465a10dd5197d4f2321735717ab9b2489aed23a9d"
+}

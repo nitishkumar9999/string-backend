@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "DELETE FROM csrf_tokens WHERE session_id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "37b0a173f1b6a1029957d7a4af45c4ba26845c25ba08f75977b40eab4338ed63"
+}

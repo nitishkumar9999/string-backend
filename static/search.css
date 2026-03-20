@@ -1,0 +1,249 @@
+/* search.css — loaded in addition to feed.css */
+
+/* ============================================================
+   Page container
+   ============================================================ */
+.search-page-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: var(--space-xl) var(--space-md);
+    margin-top: 72px;
+}
+
+/* ============================================================
+   Search bar — tag pill variant (overrides feed.css search-bar)
+   ============================================================ */
+.search-bar {
+    flex-wrap: wrap;
+    min-height: 42px;
+    padding: var(--space-xs) var(--space-md);
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.search-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+    align-items: center;
+}
+
+.search-tag-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 4px 8px;
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.search-tag-pill svg {
+    flex-shrink: 0;
+}
+
+.remove-tag {
+    background: none;
+    border: none;
+    color: var(--primary);
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    font-size: 1rem;
+    line-height: 1;
+    transition: all 0.2s;
+}
+
+.remove-tag:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* ============================================================
+   Results header
+   ============================================================ */
+.search-results-header {
+    margin-bottom: var(--space-xl);
+    padding-bottom: var(--space-lg);
+    border-bottom: 1px solid var(--border);
+}
+
+.search-query-display {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+}
+
+.search-label {
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.search-query-text {
+    font-family: var(--font-body);
+    font-size: 1.125rem;
+    color: var(--text);
+    font-weight: 500;
+}
+
+.search-tag-display {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+/* ============================================================
+   AND / OR mode toggle
+   ============================================================ */
+.search-mode-section {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+}
+
+.search-mode-label {
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.mode-toggle {
+    display: inline-flex;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 4px;
+    gap: 4px;
+}
+
+/* mode-btn is an <a> tag — reset link styles */
+.mode-btn {
+    font-family: var(--font-ui);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: var(--space-xs) var(--space-md);
+    border: none;
+    background: transparent;
+    color: var(--text-secondary);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.mode-btn:hover {
+    color: var(--text);
+    background: rgba(3, 105, 161, 0.08);
+}
+
+.mode-btn.active {
+    background: var(--primary);
+    color: white;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ============================================================
+   Results list — reuses feed-card from feed.css
+   ============================================================ */
+.search-results-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    max-width: 680px;
+    margin: 0 auto;
+}
+
+/* ============================================================
+   Empty state
+   ============================================================ */
+.search-empty-state {
+    text-align: center;
+    padding: var(--space-2xl) var(--space-xl);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+}
+
+.empty-state-icon {
+    color: var(--text-secondary);
+    opacity: 0.3;
+    margin-bottom: var(--space-lg);
+}
+
+.empty-state-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: var(--space-sm);
+}
+
+.empty-state-text {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+}
+
+.empty-state-suggestions {
+    display: inline-flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: left;
+}
+
+.suggestion-item {
+    font-family: var(--font-ui);
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+}
+
+.suggestion-item::before {
+    content: '•';
+    color: var(--primary);
+    font-weight: bold;
+}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width: 768px) {
+    .search-page-container {
+        padding: var(--space-md);
+    }
+
+    .search-mode-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+/* ============================================================
+   TAG PAGE HEADER — add to search.css
+   ============================================================ */
+

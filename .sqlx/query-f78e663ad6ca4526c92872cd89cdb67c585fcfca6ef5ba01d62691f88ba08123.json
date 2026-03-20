@@ -1,0 +1,19 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            UPDATE posts\n            SET title = COALESCE($1, title),\n                content_raw = COALESCE($2, content_raw),\n                content_rendered_html = COALESCE($3, content_rendered_html),\n                edited_at = $4\n            WHERE id = $5 AND user_id = $6\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Text",
+        "Text",
+        "Timestamptz",
+        "Int4",
+        "Int4"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "f78e663ad6ca4526c92872cd89cdb67c585fcfca6ef5ba01d62691f88ba08123"
+}

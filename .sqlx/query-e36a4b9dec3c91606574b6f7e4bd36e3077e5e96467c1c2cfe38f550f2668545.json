@@ -1,0 +1,24 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n                INSERT INTO tags (name, slug, created_by_user_id)\n                VALUES ($1, $2, $3)\n                RETURNING id\n                ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "e36a4b9dec3c91606574b6f7e4bd36e3077e5e96467c1c2cfe38f550f2668545"
+}
