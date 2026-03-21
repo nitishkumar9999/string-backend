@@ -145,7 +145,7 @@ pub fn render_answer(
             // ── Header ────────────────────────────────────────────────────
             
                 div class="answer-card-header" {
-                    div class="answer-avatar" { (initial) }
+                    (crate::templates::feed::render_avatar(answer.avatar_url.as_deref(), &answer.username))
                     div class="answer-author-info" {
                         a href=(format!("/@{}", answer.username)) 
                         span class="answer-author-name" { (answer.username) }
@@ -239,7 +239,7 @@ pub fn render_answer_input_box(
     question_id: i32,
     question_slug: &str,
     username: &str,
-    _avatar: Option<&str>,
+    avatar: Option<&str>,
     csrf_token: Option<&str>,
 ) -> Markup {
     let initial = username
@@ -254,7 +254,7 @@ pub fn render_answer_input_box(
 
             // ── Collapsed prompt ──────────────────────────────────────────
             div class="answer-input-prompt" id="answer-input-prompt" {
-                div class="answer-avatar" { (initial) }
+                (crate::templates::feed::render_avatar(avatar, username))
                 button
                     type="button"
                     class="answer-prompt-btn"
@@ -274,7 +274,7 @@ pub fn render_answer_input_box(
                         textarea
                             class="answer-textarea"
                             id="answer-textarea"
-                            placeholder="Write your answer here... Markdown is supported."
+                            placeholder="Write your answer here... "
                             maxlength="30000"
                         {}
                     }
@@ -390,7 +390,7 @@ pub fn render_answer_input_box(
             div class="split-panel-label" { "Your Answer" }
             textarea
                 id="answer-textarea-split"
-                placeholder="Write your answer here... Markdown is supported."
+                placeholder="Write your answer here... "
                 maxlength="30000"
             {}
 

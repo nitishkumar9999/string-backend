@@ -948,13 +948,11 @@
 }
 
 #bio-preview-content blockquote {
-    position: relative;
-    margin: var(--space-md) 0;
-    padding: var(--space-md) var(--space-lg);
-    background: #f8fafc;
-    border-left: 3px solid var(--primary);
-    border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    color: var(--text-secondary);
+    border-left: 4px solid var(--primary);
+    padding: var(--space-sm) var(--space-lg);
+    margin: var(--space-lg) 0;
+    background: var(--primary-light);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
     font-style: italic;
 }
 
@@ -971,7 +969,7 @@
 }
 
 #bio-preview-content blockquote p {
-    margin: 0;
+    margin-bottom: 0;
 }
 
 #bio-preview-content ul,

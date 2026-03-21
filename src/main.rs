@@ -57,8 +57,8 @@ async fn main() -> anyhow::Result<()> {
             refracts_per_day: 100,
             tag_creation_per_hour: 3,
             tag_creation_per_day: 10,
-            anonymous_per_minute: 10,
-            anonymous_per_hour: 100,
+            anonymous_per_minute: 30,
+            anonymous_per_hour: 500,
             echo_per_minute: 10,
             update_profile_per_hour: 5,
             update_username_per_day: 1,
@@ -75,8 +75,8 @@ async fn main() -> anyhow::Result<()> {
     // Create router with single state parameter
     let app = create_router(state);
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
-    println!("🚀 Server starting on http://0.0.0.0:3000");
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:3001").await?;
+    println!("🚀 Server starting on http://0.0.0.0:3001");
     axum::serve(
         listener, 
         app.into_make_service_with_connect_info::<SocketAddr>()

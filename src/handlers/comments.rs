@@ -42,6 +42,7 @@ pub struct CommentResponse {
     pub id: i32,
     pub user_id: i32,
     pub username: String,
+    pub avatar_url: Option<String>,
     pub content_rendered_html: String,
     pub depth_level: i32,
     pub helpful_count: i32,
@@ -173,11 +174,20 @@ pub async fn create_comment(
     // Get username
     let username = get_username(&state.pool, auth_user.user_id).await?;
 
+    let avatar_url = sqlx::query_scalar!(
+        "SELECT avatar_url FROM users WHERE id = $1",
+        auth_user.user_id
+    )
+    .fetch_optional(&state.pool)
+    .await?
+    .flatten();
+
     // Build response
     let response = CommentResponse {
         id: comment.id,
         user_id: comment.user_id,
         username,
+        avatar_url,
         content_rendered_html,
         depth_level: comment.depth_level.unwrap_or(0),
         helpful_count: comment.helpful_count.unwrap_or(0),
@@ -687,6 +697,7 @@ struct CommentRecord {
     id: i32,
     user_id: i32,
     username: String,
+    avatar_url: Option<String>,
     content_rendered_html: String,
     depth_level: Option<i32>,
     helpful_count: Option<i32>,
@@ -795,7 +806,7 @@ async fn fetch_comment(
         CommentRecord,
         r#"
         SELECT 
-            c.id, c.user_id, u.username, c.content_rendered_html,
+            c.id, c.user_id, u.username, u.avatar_url, c.content_rendered_html,
             c.depth_level, c.helpful_count, c.reply_count,
             c.created_at, c.edited_at, c.deleted_at,
             COALESCE(
@@ -851,7 +862,7 @@ async fn fetch_comment_replies(
             CommentRecord,
             r#"
             SELECT 
-                c.id, c.user_id, u.username, c.content_rendered_html,
+                c.id, c.user_id, u.username, u.avatar_url, c.content_rendered_html,
                 c.depth_level, c.helpful_count, c.reply_count,
                 c.created_at, c.edited_at, c.deleted_at,
                 COALESCE(
@@ -878,7 +889,7 @@ async fn fetch_comment_replies(
             CommentRecord,
             r#"
             SELECT
-                c.id, c.user_id, u.username, c.content_rendered_html,
+                c.id, c.user_id, u.username, u.avatar_url, c.content_rendered_html,
                 c.depth_level, c.helpful_count, c.reply_count,
                 c.created_at, c.edited_at, c.deleted_at,
                 COALESCE(
@@ -924,7 +935,7 @@ pub async fn fetch_parent_comments(
             CommentRecord,
             r#"
             SELECT 
-                c.id, c.user_id, u.username, c.content_rendered_html,
+                c.id, c.user_id, u.username, u.avatar_url, c.content_rendered_html,
                 c.depth_level, c.helpful_count, c.reply_count,
                 c.created_at, c.edited_at, c.deleted_at,
                 COALESCE(
@@ -956,7 +967,7 @@ pub async fn fetch_parent_comments(
             CommentRecord,
             r#"
             SELECT 
-                c.id, c.user_id, u.username, c.content_rendered_html,
+                c.id, c.user_id, u.username, u.avatar_url, c.content_rendered_html,
                 c.depth_level, c.helpful_count, c.reply_count,
                 c.created_at, c.edited_at, c.deleted_at,
                 COALESCE(
@@ -997,6 +1008,7 @@ fn build_comment_response(comment: CommentRecord) -> CommentResponse {
         } else {
             comment.username
         },
+        avatar_url: if is_deleted { None } else { comment.avatar_url },
         content_rendered_html: if is_deleted {
             "[deleted]".to_string()
         } else {

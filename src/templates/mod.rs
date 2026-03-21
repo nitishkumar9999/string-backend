@@ -9,3 +9,4 @@ pub mod profile_edit;
 pub mod refract;
 pub mod tags;
 pub mod answer;
+pub mod error;

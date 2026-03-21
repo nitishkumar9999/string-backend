@@ -1,6 +1,6 @@
 use axum::{
     http::StatusCode,
-    response::{IntoResponse, Response},
+    response::{IntoResponse, Response, Html},
     Json,
 };
 use serde::Serialize;
@@ -244,73 +244,48 @@ pub struct RateLimitResponse {
 
 impl IntoResponse for AppError {
     fn into_response(self) -> Response {
-        let (status, error_response) = match self {
+        match self {
             AppError::Validation(e) => {
                 let response = ErrorResponse {
                     error: "validation_error".to_string(),
                     message: e.to_string(),
                     details: None,
                 };
-                (StatusCode::BAD_REQUEST, Json(response))
+                (StatusCode::BAD_REQUEST, Json(response)).into_response()
             }
 
             AppError::RateLimit(e) => {
-                let response = RateLimitResponse {
-                    error: "rate_limit_exceeded".to_string(),
-                    message: format!("You've exceeded the limit for {}", e.action),
-                    limit: e.limit,
-                    current_count: e.current_count,
-                    retry_after_seconds: e.retry_after_seconds,
-                    window_resets_at: e.window_resets_at,
-                };
-                return (StatusCode::TOO_MANY_REQUESTS, Json(response)).into_response();
+                let html = crate::templates::error::render_rate_limit_error(
+                    &e.limit,
+                    e.retry_after_seconds,
+                    &format!(
+                        "You've exceeded the limit for {}. Please wait before trying again.",
+                        e.action
+                    ),
+                );
+                
+                let mut response = Html(html.into_string()).into_response();
+                *response.status_mut() = StatusCode::TOO_MANY_REQUESTS;
+                response.headers_mut().insert(
+                    "Retry-After",
+                    e.retry_after_seconds.to_string().parse().unwrap(),
+                );
+                response
             }
 
-            AppError::Database(e) => {
-                tracing::error!("Database error: {:?}", e);
-                let response = ErrorResponse {
-                    error: "database_error".to_string(),
-                    message: "A database error occurred".to_string(),
-                    details: None,
-                };
-                (StatusCode::INTERNAL_SERVER_ERROR, Json(response))
+            AppError::Database(_) | AppError::Internal(_) | AppError::InternalError | AppError::Search => {
+                tracing::error!("Server error");
+                let html = crate::templates::error::render_500_error();
+                let mut response = Html(html.into_string()).into_response();
+                *response.status_mut() = StatusCode::INTERNAL_SERVER_ERROR;
+                response
             }
 
-            AppError::Internal(msg) => {
-                tracing::error!("Internal error: {}", msg);
-                let response = ErrorResponse {
-                    error: "internal_error".to_string(),
-                    message: "An internal error occurred".to_string(),
-                    details: None,
-                };
-                (StatusCode::INTERNAL_SERVER_ERROR, Json(response))
-            }
-
-            AppError::AuthenticationRequired => {
-                let response = ErrorResponse {
-                    error: "authentication_required".to_string(),
-                    message: "You must be logged in to perform this action".to_string(),
-                    details: None,
-                };
-                (StatusCode::UNAUTHORIZED, Json(response))
-            }
-
-            AppError::SessionNotFound => {
-                let response = ErrorResponse {
-                    error: "session_not_found".to_string(),
-                    message: "Session not found or invalid".to_string(),
-                    details: None,
-                };
-                (StatusCode::UNAUTHORIZED, Json(response))
-            }
-
-            AppError::SessionExpired => {
-                let response = ErrorResponse {
-                    error: "session_expired".to_string(),
-                    message: "Your session has expired. Please log in again".to_string(),
-                    details: None,
-                };
-                (StatusCode::UNAUTHORIZED, Json(response))
+            AppError::AuthenticationRequired | AppError::SessionExpired | AppError::SessionNotFound => {
+                let html = crate::templates::error::render_401_error();
+                let mut response = Html(html.into_string()).into_response();
+                *response.status_mut() = StatusCode::UNAUTHORIZED;
+                response
             }
 
             AppError::InvalidCredentials => {
@@ -319,7 +294,7 @@ impl IntoResponse for AppError {
                     message: "Invalid username or password".to_string(),
                     details: None,
                 };
-                (StatusCode::UNAUTHORIZED, Json(response))
+                (StatusCode::UNAUTHORIZED, Json(response)).into_response()
             }
 
             AppError::AccountNotFound => {
@@ -328,17 +303,16 @@ impl IntoResponse for AppError {
                     message: "Account not found".to_string(),
                     details: None,
                 };
-                (StatusCode::NOT_FOUND, Json(response))
+                (StatusCode::NOT_FOUND, Json(response)).into_response()
             }
 
-            // CSRF errors (403)
             AppError::CsrfTokenMissing => {
                 let response = ErrorResponse {
                     error: "csrf_token_missing".to_string(),
                     message: "CSRF token is required for this request".to_string(),
                     details: None,
                 };
-                (StatusCode::FORBIDDEN, Json(response))
+                (StatusCode::FORBIDDEN, Json(response)).into_response()
             }
 
             AppError::CsrfTokenInvalid => {
@@ -347,7 +321,7 @@ impl IntoResponse for AppError {
                     message: "CSRF token is invalid or has expired".to_string(),
                     details: None,
                 };
-                (StatusCode::FORBIDDEN, Json(response))
+                (StatusCode::FORBIDDEN, Json(response)).into_response()
             }
 
             AppError::TooManyActiveTokens => {
@@ -356,29 +330,21 @@ impl IntoResponse for AppError {
                     message: "Too many active CSRF tokens. Please try again later".to_string(),
                     details: None,
                 };
-                (StatusCode::TOO_MANY_REQUESTS, Json(response))
+                (StatusCode::TOO_MANY_REQUESTS, Json(response)).into_response()
             }
 
-            // Permission errors (403)
-            AppError::Forbidden => {
-                let response = ErrorResponse {
-                    error: "forbidden".to_string(),
-                    message: "You don't have permission to perform this action".to_string(),
-                    details: None,
+            AppError::Forbidden | AppError::CannotActOnOwnContent => {
+                let message = match self {
+                    AppError::Forbidden => "You don't have permission to perform this action.",
+                    AppError::CannotActOnOwnContent => "You cannot echo or refract your own content.",
+                    _ => unreachable!(),
                 };
-                (StatusCode::FORBIDDEN, Json(response))
+                let html = crate::templates::error::render_403_error(message);
+                let mut response = Html(html.into_string()).into_response();
+                *response.status_mut() = StatusCode::FORBIDDEN;
+                response
             }
 
-            AppError::CannotActOnOwnContent => {
-                let response = ErrorResponse {
-                    error: "cannot_act_on_own_content".to_string(),
-                    message: "You cannot echo or refract your own content".to_string(),
-                    details: None,
-                };
-                (StatusCode::FORBIDDEN, Json(response))
-            }
-
-            // OAuth errors (400/500)
             AppError::OAuth(msg) => {
                 tracing::error!("OAuth error: {}", msg);
                 let response = ErrorResponse {
@@ -386,7 +352,7 @@ impl IntoResponse for AppError {
                     message: "OAuth authentication failed".to_string(),
                     details: Some(serde_json::json!({ "detail": msg })),
                 };
-                (StatusCode::UNAUTHORIZED, Json(response))
+                (StatusCode::UNAUTHORIZED, Json(response)).into_response()
             }
 
             AppError::OAuthStateMismatch => {
@@ -395,47 +361,24 @@ impl IntoResponse for AppError {
                     message: "OAuth state validation failed. Please try again".to_string(),
                     details: None,
                 };
-                (StatusCode::UNAUTHORIZED, Json(response))
+                (StatusCode::UNAUTHORIZED, Json(response)).into_response()
             }
 
-            AppError::InternalError => {
-                tracing::error!("Internal error occurred");
-                let response = ErrorResponse {
-                    error: "internal_error".to_string(),
-                    message: "An internal error occurred".to_string(),
-                    details: None,
-                };
-                (StatusCode::INTERNAL_SERVER_ERROR, Json(response))
-            }
-
-            AppError::Search => {
-                let response = ErrorResponse {
-                    error: "Search_error".to_string(),
-                    message: "Search failed. Please try again.".to_string(),
-                    details: None,
-                };
-                (StatusCode::INTERNAL_SERVER_ERROR, Json(response))
-            },
-
-            AppError::InvalidHeader(InvalidHeaderValue) => {
+            AppError::InvalidHeader(_) => {
                 let response = ErrorResponse {
                     error: "Invalid_header".to_string(),
                     message: "Invalid or missing required header. Please check your request.".to_string(),
                     details: None,
                 };
-                (StatusCode::BAD_REQUEST, Json(response))
-            },
+                (StatusCode::BAD_REQUEST, Json(response)).into_response()
+            }
 
             AppError::NotFound => {
-                let response = ErrorResponse {
-                    error: "not_found".to_string(),
-                    message: "The requested resource was not found".to_string(),
-                    details: None,
-                };
-                (StatusCode::NOT_FOUND, Json(response))
+                let html = crate::templates::error::render_404_error();
+                let mut response = Html(html.into_string()).into_response();
+                *response.status_mut() = StatusCode::NOT_FOUND;
+                response
             }
-        };
-        (status, error_response).into_response()
+        }
     }
-    
 }

@@ -50,18 +50,26 @@ impl RequestContext {
 // ============================================================================
 
 fn extract_ip(headers: &HeaderMap, socket: Option<SocketAddr>) -> IpAddr {
+    // 1. CF-Connecting-IP — most trusted when behind Cloudflare
     headers
+        .get("cf-connecting-ip")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|ip| ip.trim().parse().ok())
+    // 2. X-Real-IP — set by Nginx
+    .or_else(|| headers
+        .get("x-real-ip")
+        .and_then(|h| h.to_str().ok())
+        .and_then(|ip| ip.parse().ok()))
+    // 3. X-Forwarded-For — least trusted, can be spoofed
+    .or_else(|| headers 
         .get("x-forwarded-for")
         .and_then(|h| h.to_str().ok())
         .and_then(|s| s.split(',').next())
-        .and_then(|ip| ip.trim().parse().ok())
-        .or_else(|| headers
-            .get("x-real-ip")
-            .and_then(|h| h.to_str().ok())
-            .and_then(|ip| ip.parse().ok()))
-        .unwrap_or_else(|| socket
-            .map(|s| s.ip())
-            .unwrap_or(IpAddr::V4(Ipv4Addr::UNSPECIFIED)))
+        .and_then(|ip| ip.trim().parse().ok()))
+    // 4. Fallback to socket
+    .unwrap_or_else(|| socket
+        .map(|s| s.ip())
+        .unwrap_or(IpAddr::V4(Ipv4Addr::UNSPECIFIED)))
 }
 
 fn anonymize_ip(ip: IpAddr) -> Option<ipnetwork::IpNetwork> {

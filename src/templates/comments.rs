@@ -123,9 +123,9 @@ pub fn render_comment(
         {
             // ── Header ───────────────────────────────────────────────────
             div class="comment-header" {
-                div class="comment-avatar" {
-                    span { (comment.username.chars().next().unwrap_or('?').to_uppercase().to_string()) }
-                }
+
+                (crate::templates::feed::render_avatar(comment.avatar_url.as_deref(), &comment.username))
+
                 div class="comment-meta" {
                     a href=(format!("/@{}", comment.username)) class="comment-author" {
                         (comment.username)
@@ -242,7 +242,7 @@ pub fn render_comment_input_box(
     parent_comment_id: Option<i32>,
     depth: i32,
     username: &str,
-    _avatar: Option<&str>,
+    avatar: Option<&str>,
     csrf_token: Option<&str>,
 ) -> Markup {
     let max_chars = match depth {
@@ -269,7 +269,7 @@ pub fn render_comment_input_box(
     html! {
         div class="comment-input-container" id=(format!("input-container-{}", form_id)) {
             div class="comment-input-header" {
-                div class="comment-avatar" { span { (initial) } }
+                (crate::templates::feed::render_avatar(avatar, username))
                 div class="comment-input-body" {
                     textarea
                         class="comment-textarea"

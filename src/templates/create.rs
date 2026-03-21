@@ -170,7 +170,7 @@ pub fn render_create_question_page(
                                 class="title-input"
                                 id="post-title"
                                 name="title"
-                                placeholder="e.g., How do I implement OAuth2 in Axum with PostgreSQL?"
+                                placeholder="e.g., Why does my Axum middleware drop the request body before my handler reads it?"
                                 maxlength="200"
                                 required;
                             p class="form-help" { "Be specific and describe the problem you're facing" }
@@ -282,7 +282,7 @@ fn render_body_section(max_chars: &str) -> Markup {
                     class="body-textarea"
                     id="body-textarea"
                     name="content"
-                    placeholder="Write your post content here... Markdown is supported!"
+                    placeholder="Write your post content here... "
                     maxlength=(max_chars)
                     required
                     {}
@@ -376,7 +376,7 @@ fn render_body_section(max_chars: &str) -> Markup {
                 }
             }
 
-            p class="form-help" { "Markdown formatting supported. Minimum 10 characters required." }
+            p class="form-help" { "Minimum 10 characters required." }
         }
     }
 }
